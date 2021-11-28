@@ -1,0 +1,27 @@
+# Depedencies
+node_modules/
+npm-debug.log
+yarn-debug.log
+package-lock.json
+
+# Uploads directories
+src/uploads
+
+# Exports directories
+public/documents
+
+# Environment
+.env
+.env.local
+.env.production
+.env.development
+.env.test
+
+# build result
+/dist
+
+# new relic
+newrelic_agent.log
+
+# backup dir
+/backup/*
