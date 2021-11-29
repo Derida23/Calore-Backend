@@ -5,9 +5,9 @@ const define = {
   freezeTableName: true,
   underscored: true,
   paranoid: true,
-  createdAt: 'createdAt',
-  updatedAt: 'updateAt',
-  deletedAt: 'deletedAt',
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
+  deletedAt: 'deleted_at',
 };
 
 module.exports = {

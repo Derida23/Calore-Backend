@@ -6,19 +6,19 @@ module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
     static associate(models) {
       Order.belongsTo(models.Users, {
-        foreignKey: 'userId',
+        foreignKey: 'user_id',
         as: 'user',
       });
       Order.belongsTo(models.Taxs, {
-        foreignKey: 'taxId',
+        foreignKey: 'tax_id',
         as: 'tax',
       });
       Order.belongsTo(models.Discounts, {
-        foreignKey: 'discountId',
+        foreignKey: 'discount_id',
         as: 'discount',
       });
       Order.hasMany(models.OrderDetails, {
-        foreignKey: 'orderId',
+        foreignKey: 'order_id',
         as: 'orders',
       });
     }
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.BIGINT(20),
       },
-      orderNumber: {
+      order_number: {
         allowNull: false,
         type: DataTypes.STRING(50),
         field: 'order_number',
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(50),
         field: 'name',
       },
-      userId: {
+      user_id: {
         allowNull: false,
         type: DataTypes.INTEGER,
         field: 'user_id',
@@ -71,12 +71,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DECIMAL(25, 2),
         field: 'total',
       },
-      taxId: {
+      tax_id: {
         allowNull: false,
         type: DataTypes.INTEGER,
         field: 'tax_id',
       },
-      discountId: {
+      discount_id: {
         allowNull: true,
         type: DataTypes.INTEGER,
         field: 'discount_id',

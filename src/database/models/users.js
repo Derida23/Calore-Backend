@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       User.hasMany(models.Orders, {
-        foreignKey: 'userId',
+        foreignKey: 'user_id',
         as: 'orders',
       });
     }
@@ -38,11 +38,13 @@ module.exports = (sequelize, DataTypes) => {
       role: {
         allowNull: false,
         type: DataTypes.BOOLEAN,
+        defaultValue: 2,
         field: 'role',
       },
       status: {
         allowNull: false,
         type: DataTypes.BOOLEAN,
+        defaultValue: 1,
         field: 'status',
       },
       phone: {
@@ -52,12 +54,12 @@ module.exports = (sequelize, DataTypes) => {
         field: 'phone',
       },
       token: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.TEXT,
         field: 'token',
       },
-      lastLogin: {
-        allowNull: false,
+      last_login: {
+        allowNull: true,
         defaultValue: new Date(Date.now()),
         type: DataTypes.DATE,
         field: 'last_login',
@@ -67,10 +69,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         field: 'address',
       },
-      district: {
+      districts: {
         allowNull: false,
         type: DataTypes.INTEGER(20),
-        field: 'district',
+        field: 'districts',
       },
       regencies: {
         allowNull: false,

@@ -1,6 +1,9 @@
 'use strict';
 
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
+  class Uom extends Model {}
   Uom.init(
     {
       id: {

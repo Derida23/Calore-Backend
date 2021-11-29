@@ -6,15 +6,15 @@ module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     static associate(models) {
       Product.belongsTo(models.Uoms, {
-        foreignKey: 'uomId',
+        foreignKey: 'uom_id',
         as: 'uoms',
       });
       Product.belongsTo(models.Categories, {
-        foreignKey: 'categoryId',
+        foreignKey: 'category_id',
         as: 'category',
       });
       Product.belongsTo(models.Discounts, {
-        foreignKey: 'discountId',
+        foreignKey: 'discount_id',
         as: 'discount',
       });
     }
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.BIGINT(20),
       },
-      productCode: {
+      product_code: {
         allowNull: false,
         type: DataTypes.STRING(50),
         field: 'product_code',
@@ -47,22 +47,22 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         field: 'image',
       },
-      unitInStock: {
+      unit_in_stock: {
         allowNull: false,
         type: DataTypes.INTEGER,
         field: 'unit_in_stock',
       },
-      unitPrice: {
+      unit_price: {
         allowNull: false,
         type: DataTypes.DECIMAL(25, 2),
         field: 'unit_price',
       },
-      uomId: {
+      uom_id: {
         allowNull: false,
         type: DataTypes.INTEGER,
         field: 'uom_id',
       },
-      categoryId: {
+      category_id: {
         allowNull: false,
         type: DataTypes.INTEGER,
         field: 'category_id',
@@ -72,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         field: 'status',
       },
-      discountId: {
+      discount_id: {
         allowNull: true,
         type: DataTypes.INTEGER,
         field: 'discount_id',

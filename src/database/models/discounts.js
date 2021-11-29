@@ -1,6 +1,9 @@
 'use strict';
 
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
+  class Discount extends Model {}
   Discount.init(
     {
       id: {
@@ -34,12 +37,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         field: 'status',
       },
-      dateFrom: {
+      date_from: {
         allowNull: false,
         type: DataTypes.DATE,
         field: 'date_from',
       },
-      dateTo: {
+      date_to: {
         allowNull: false,
         type: DataTypes.DATE,
         field: 'date_to',

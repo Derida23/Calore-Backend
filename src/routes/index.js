@@ -1,5 +1,6 @@
 import { prefix } from '../helpers/version_control';
 import { AuthRoutes } from '../modules/auth/auth_routes';
+import { UserRoutes } from '../modules/user/user_routes';
 
 const MainRoutes = (app) => {
   // Test the connection api
@@ -10,7 +11,10 @@ const MainRoutes = (app) => {
   });
 
   // authentication routes
-  // AuthRoutes(app, prefix);
+  AuthRoutes(app, prefix);
+
+  // user routes
+  UserRoutes(app, prefix);
 };
 
 export default MainRoutes;

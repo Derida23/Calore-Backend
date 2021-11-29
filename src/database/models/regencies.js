@@ -1,6 +1,9 @@
 'use strict';
 
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
+  class Regency extends Model {}
   Regency.init(
     {
       id: {
@@ -9,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.STRING,
       },
-      provinceId: {
+      province_id: {
         allowNull: false,
         type: DataTypes.STRING,
         field: 'province_id',

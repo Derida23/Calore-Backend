@@ -22,7 +22,7 @@ const authentication = async (req, res, next) => {
       }
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return ResponseHelper(res, 401, error.message, null);
   }
 };
