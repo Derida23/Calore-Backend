@@ -20,6 +20,9 @@ const authentication = async (req, res, next) => {
       ) {
         return ResponseHelper(res, 401, error.message, null);
       }
+      req.app.locals.token = token;
+      req.app.locals.user_id = decoded.user_id;
+      next();
     });
   } catch (error) {
     console.error(error);

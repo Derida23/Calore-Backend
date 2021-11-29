@@ -30,7 +30,7 @@ const update = async (req, res) => {
 
   try {
     const { user_id } = req.app.locals;
-    const { name, status, phone, address, districts, regencies, provinces } = req.body;
+    const { name, status, phone, address, district_id, regencie_id, province_id } = req.body;
 
     const { user } = await findUserById(user_id);
 
@@ -43,7 +43,7 @@ const update = async (req, res) => {
 
     // Can only update
     await updateUser(
-      { name, status, phone, address, districts, regencies, provinces },
+      { name, status, phone, address, district_id, regencie_id, province_id },
       { where: { id: user_id } }
     );
 

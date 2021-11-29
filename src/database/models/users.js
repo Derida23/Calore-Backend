@@ -9,6 +9,18 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'user_id',
         as: 'orders',
       });
+      User.belongsTo(models.Provinces, {
+        foreignKey: 'province_id',
+        as: 'provinces',
+      });
+      User.belongsTo(models.Regencies, {
+        foreignKey: 'regencie_id',
+        as: 'regencies',
+      });
+      User.belongsTo(models.Districts, {
+        foreignKey: 'district_id',
+        as: 'districts',
+      });
     }
   }
   User.init(
@@ -27,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       password: {
         allowNull: false,
-        type: DataTypes.STRING(25),
+        type: DataTypes.STRING(255),
         field: 'password',
       },
       name: {
@@ -69,34 +81,34 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         field: 'address',
       },
-      districts: {
+      district_id: {
         allowNull: false,
         type: DataTypes.INTEGER(20),
-        field: 'districts',
+        field: 'district_id',
       },
-      regencies: {
+      regencie_id: {
         allowNull: false,
         type: DataTypes.INTEGER(20),
-        field: 'regencies',
+        field: 'regencie_id',
       },
-      provinces: {
+      province_id: {
         allowNull: false,
         type: DataTypes.INTEGER(20),
-        field: 'provinces',
+        field: 'province_id',
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         defaultValue: new Date(Date.now()),
         type: DataTypes.DATE,
         field: 'created_at',
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         defaultValue: new Date(Date.now()),
         type: DataTypes.DATE,
         field: 'updated_at',
       },
-      deletedAt: {
+      deleted_at: {
         allowNull: true,
         type: DataTypes.DATE,
         field: 'deleted_at',

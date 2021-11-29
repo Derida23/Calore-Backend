@@ -8,9 +8,9 @@ const validate = (method) => {
         body('status').not().isEmpty().withMessage('status can not be empty'),
         body('phone').not().isEmpty().withMessage('phone number can not be empty'),
         body('address').not().isEmpty().withMessage('address can not be empty'),
-        body('districts').not().isEmpty().withMessage('districts can not be empty'),
-        body('regencies').not().isEmpty().withMessage('regencies can not be empty'),
-        body('provinces').not().isEmpty().withMessage('provinces  can not be empty'),
+        body('district_id').not().isEmpty().withMessage('districts can not be empty'),
+        body('regencie_id').not().isEmpty().withMessage('regencies can not be empty'),
+        body('province_id').not().isEmpty().withMessage('provinces  can not be empty'),
       ];
     }
     default:

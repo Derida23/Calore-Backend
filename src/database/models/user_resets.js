@@ -24,19 +24,19 @@ module.exports = (sequelize, DataTypes) => {
         field: 'token',
       },
 
-      createdAt: {
+      created_at: {
         allowNull: false,
         defaultValue: new Date(Date.now()),
         type: DataTypes.DATE,
         field: 'created_at',
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         defaultValue: new Date(Date.now()),
         type: DataTypes.DATE,
         field: 'updated_at',
       },
-      deletedAt: {
+      deleted_at: {
         allowNull: true,
         type: DataTypes.DATE,
         field: 'deleted_at',

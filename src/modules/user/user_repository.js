@@ -1,10 +1,28 @@
 import db from '../../database/models';
-const { Users } = db;
+const { Users, Provinces, Districts, Regencies } = db;
 
 // Find one user by id
 const findUserById = async (id) => {
   try {
-    let result = await Users.findByPk(id, { raw: true });
+    let result = await Users.findByPk(id, {
+      include: [
+        {
+          model: Provinces,
+          as: 'provinces',
+          attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        },
+        {
+          model: Regencies,
+          as: 'regencies',
+          attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        },
+        {
+          model: Districts,
+          as: 'districts',
+          attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        },
+      ],
+    });
     return result;
   } catch (error) {
     console.error('[EXCEPTION] findUserById', error);
@@ -15,7 +33,26 @@ const findUserById = async (id) => {
 // Find One User By Filter
 const findOneUser = async (filter) => {
   try {
-    let result = await Users.findOne({ ...filter, raw: true });
+    let result = await Users.findOne({
+      ...filter,
+      include: [
+        {
+          model: Provinces,
+          as: 'provinces',
+          attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        },
+        {
+          model: Regencies,
+          as: 'regencies',
+          attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        },
+        {
+          model: Districts,
+          as: 'districts',
+          attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        },
+      ],
+    });
     return result;
   } catch (error) {
     console.error('[EXCEPTION] findOneUser', error);

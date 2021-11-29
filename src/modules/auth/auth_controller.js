@@ -3,6 +3,7 @@ import { generatePassword, generateToken, comparePassword } from '../../helpers/
 import { createUser } from './auth_repository';
 import { findOneUser, updateUser } from '../user/user_repository';
 import ResponseHelper from '../../helpers/response_helper';
+import bcrypt from 'bcryptjs';
 
 // Register new user
 const register = async (req, res) => {
@@ -20,15 +21,14 @@ const register = async (req, res) => {
       role,
       phone,
       address,
-      districts,
-      regencies,
-      provinces,
+      district_id,
+      regencie_id,
+      province_id,
     } = req.body;
 
     // Checking available user
     let check_user = await findOneUser({
       where: { email },
-      raw: true,
     });
 
     if (check_user) {
@@ -46,18 +46,18 @@ const register = async (req, res) => {
 
     const password_hash = await generatePassword(password);
     const new_user = await createUser({
+      email,
+      password: password_hash,
       name,
       role,
       phone,
       address,
-      districts,
-      regencies,
-      provinces,
-      password: password_hash,
+      district_id,
+      regencie_id,
+      province_id,
     });
 
-    let user = await findOneUser({ where: { id: new_user.id }, raw: true });
-    delete user.password;
+    let user = await findOneUser({ where: { id: new_user.id } });
 
     const token = generateToken(user.id);
 
@@ -65,6 +65,8 @@ const register = async (req, res) => {
       { token: token, last_login: new Date(Date.now()) },
       { where: { id: new_user.id } }
     );
+
+    delete user.password;
 
     return ResponseHelper(res, 200, `success register new user`, {
       token,
@@ -86,7 +88,7 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    let user = await findOneUser({ where: { email }, raw: true });
+    let user = await findOneUser({ where: { email } });
 
     // Check Email
     if (!user) {
@@ -96,16 +98,17 @@ const login = async (req, res) => {
     }
 
     const isMatch = await comparePassword(password, user.password);
-    delete user.password;
+    const validPassword = await bcrypt.compare(password, user.password);
 
     // Check Password
     if (!isMatch) {
-      return ResponseHelper(res, 422, 'wrong Ppassword', [
+      return ResponseHelper(res, 422, 'wrong password', [
         { message: 'wrong password', param: 'password' },
       ]);
     }
 
     const token = generateToken(user.id);
+    delete user.password;
 
     return ResponseHelper(res, 200, 'success login', { token, user });
   } catch (error) {

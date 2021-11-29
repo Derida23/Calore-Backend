@@ -42,9 +42,9 @@ const getUserId = (token) => {
 
 const comparePassword = async (password, compare_password) => {
   return new Promise((resolve, reject) => {
-    bcrypt.compare(password, compare_password, function (error, is_match) {
+    bcrypt.compare(password, compare_password, function (error, res) {
       if (error) reject(error);
-      resolve(is_match);
+      resolve(res);
     });
   });
 };

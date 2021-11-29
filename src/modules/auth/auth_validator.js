@@ -11,10 +11,10 @@ const validate = (method) => {
         body('role').not().isEmpty().withMessage('role can not be empty'),
         body('name').not().isEmpty().withMessage('name can not be empty'),
         body('phone').not().isEmpty().withMessage('phone can not be empty'),
-        body('adress').not().isEmpty().withMessage('adress can not be empty'),
-        body('districts').not().isEmpty().withMessage('districts can not be empty'),
-        body('regencies').not().isEmpty().withMessage('regencies can not be empty'),
-        body('provinces').not().isEmpty().withMessage('provinces can not be empty'),
+        body('address').not().isEmpty().withMessage('address can not be empty'),
+        body('district_id').not().isEmpty().withMessage('districts can not be empty'),
+        body('regencie_id').not().isEmpty().withMessage('regencies can not be empty'),
+        body('province_id').not().isEmpty().withMessage('provinces can not be empty'),
       ];
     }
     case 'login': {
