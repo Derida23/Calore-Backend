@@ -8,7 +8,7 @@ const validate = (method) => {
         body('password').not().isEmpty().withMessage('password can not be empty'),
         body('confirm_password').not().isEmpty().withMessage('confirm password can not be empty'),
         body('email').not().isEmpty().withMessage('email can not be empty'),
-        body('email').isEmail().withMessage('email can not be empty'),
+        body('email').isEmail().withMessage('email does not match the format'),
         body('fullname').not().isEmpty().withMessage('fullname can not be empty'),
         body('phone_number').not().isEmpty().withMessage('phone number can not be empty'),
         body('adress').not().isEmpty().withMessage('adress can not be empty'),
@@ -19,9 +19,9 @@ const validate = (method) => {
     }
     case 'login': {
       return [
-        body('email').not().isEmpty().withMessage('Email Cannot Be Empty'),
-        body('email').isEmail().withMessage('Wrong Email Format'),
-        body('password').not().isEmpty().withMessage('Password Cannot Be Empty'),
+        body('email').not().isEmpty().withMessage('email can not be empty'),
+        body('email').isEmail().withMessage('email does not match the format'),
+        body('password').not().isEmpty().withMessage('password can not be empty'),
       ];
     }
 
