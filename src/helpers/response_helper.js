@@ -1,5 +1,6 @@
 /**
  *
+ * Error Code
  * 200 Succes get api
  * 201 Succes edit api
  * 401 Unauthorized token
