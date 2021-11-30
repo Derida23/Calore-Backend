@@ -27,13 +27,23 @@ const register = async (req, res) => {
     } = req.body;
 
     // Checking available user
-    let check_user = await findOneUser({
+    let check_email = await findOneUser({
       where: { email },
     });
 
-    if (check_user) {
+    let check_phone = await findOneUser({
+      where: { phone },
+    });
+
+    if (check_email) {
       return ResponseHelper(res, 409, 'email already registered', [
         { message: 'email already registered', param: 'email' },
+      ]);
+    }
+
+    if (check_phone) {
+      return ResponseHelper(res, 409, 'phone already registered', [
+        { message: 'phone already registered', param: 'phone' },
       ]);
     }
 

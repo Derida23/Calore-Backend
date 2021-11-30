@@ -4,7 +4,7 @@ import AuthMiddleware from '../../middlewares/authentication';
 
 const UserRoutes = (app, prefix) => {
   app.route(`${prefix}/profile`).get(AuthMiddleware, user);
-  app.route(`${prefix}/update`).patch(AuthMiddleware, validator('update'), update);
+  app.route(`${prefix}/profile/update`).patch(AuthMiddleware, validator('update'), update);
 };
 
 export { UserRoutes };

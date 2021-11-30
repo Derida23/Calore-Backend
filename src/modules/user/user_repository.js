@@ -5,6 +5,7 @@ const { Users, Provinces, Districts, Regencies } = db;
 const findUserById = async (id) => {
   try {
     let result = await Users.findByPk(id, {
+      raw: true,
       include: [
         {
           model: Provinces,

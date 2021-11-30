@@ -1,6 +1,6 @@
 import { validationResult } from 'express-validator';
 import ResponseHelper from '../../helpers/response_helper';
-import { findUserById, updateUser } from './user_repository';
+import { findOneUser, findUserById, updateUser } from './user_repository';
 
 // Get Detail User
 const user = async (req, res) => {
@@ -32,13 +32,26 @@ const update = async (req, res) => {
     const { user_id } = req.app.locals;
     const { name, status, phone, address, district_id, regencie_id, province_id } = req.body;
 
-    const { user } = await findUserById(user_id);
+    const user = await findUserById(user_id);
+
+    let check_phone = await findOneUser({
+      where: { phone },
+    });
 
     // Check user already exist in database or not
     if (!user) {
       return ResponseHelper(res, 404, 'user not found', [
         { message: 'user not found', param: 'id' },
       ]);
+    }
+
+    // Check phone registered
+    if (check_phone) {
+      if (user_id !== check_phone.id && check_phone.phone === phone) {
+        return ResponseHelper(res, 409, 'phone has been used', [
+          { message: 'phone has been used', param: 'phone' },
+        ]);
+      }
     }
 
     // Can only update
