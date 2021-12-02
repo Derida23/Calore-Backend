@@ -1,5 +1,6 @@
 import { prefix } from '../helpers/version_control';
 import { AuthRoutes } from '../modules/auth/auth_routes';
+import { TaxRoutes } from '../modules/tax/tax_routes';
 import { UserRoutes } from '../modules/user/user_routes';
 
 const MainRoutes = (app) => {
@@ -15,6 +16,9 @@ const MainRoutes = (app) => {
 
   // user routes
   UserRoutes(app, prefix);
+
+  // tax routes
+  TaxRoutes(app, prefix);
 };
 
 export default MainRoutes;

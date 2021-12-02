@@ -79,7 +79,7 @@ const updateAdmin = async (req, res) => {
 
   try {
     const { name, status, phone, address, district_id, regencie_id, province_id } = req.body;
-    const { id } = req.query;
+    const { id } = req.params;
     const { user_id } = req.app.locals;
 
     const user = await findUserById(id);
@@ -101,9 +101,6 @@ const updateAdmin = async (req, res) => {
     let check_phone = await findOneUser({
       where: { phone },
     });
-
-    console.log(check_phone.id === id);
-    console.log(check_phone.phone, phone);
 
     // Check phone registered
     if (check_phone) {
