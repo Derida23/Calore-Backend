@@ -2,6 +2,9 @@ import { prefix } from '../helpers/version_control';
 import { AuthRoutes } from '../modules/auth/auth_routes';
 import { TaxRoutes } from '../modules/tax/tax_routes';
 import { UserRoutes } from '../modules/user/user_routes';
+import { DiscountRoutes } from '../modules/discount/discount_routes';
+import { UomRoutes } from '../modules/uom/uom_routes';
+import { CategoryRoutes } from '../modules/categories/category_routes';
 
 const MainRoutes = (app) => {
   // Test the connection api
@@ -19,6 +22,15 @@ const MainRoutes = (app) => {
 
   // tax routes
   TaxRoutes(app, prefix);
+
+  // discount routes
+  DiscountRoutes(app, prefix);
+
+  // uom routes
+  UomRoutes(app, prefix);
+
+  // category routes
+  CategoryRoutes(app, prefix);
 };
 
 export default MainRoutes;

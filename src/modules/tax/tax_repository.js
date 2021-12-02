@@ -43,7 +43,7 @@ const findListTax = async ({ search }, page, limit) => {
   }
 };
 
-// Create New Product
+// Create New Tax
 const createTax = async (data, transaction) => {
   const t = transaction ? transaction : await db.sequelize.transaction();
   try {
@@ -57,7 +57,7 @@ const createTax = async (data, transaction) => {
   }
 };
 
-// Update Product
+// Update Tax
 const updateTax = async (data, filter, transaction) => {
   const t = transaction ? transaction : await db.sequelize.transaction();
   try {

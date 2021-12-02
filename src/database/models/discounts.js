@@ -33,8 +33,9 @@ module.exports = (sequelize, DataTypes) => {
         field: 'type',
       },
       status: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.BOOLEAN,
+        defaultValue: 1,
         field: 'status',
       },
       date_from: {

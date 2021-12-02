@@ -1,14 +1,18 @@
 import { validationResult } from 'express-validator';
 import ResponseHelper from '../../helpers/response_helper';
 import { findUserById } from '../user/user_repository';
-import { createTax, findListTax, findTaxById, updateTax } from './tax_repository';
+import {
+  createCategory,
+  findListCategory,
+  findCategoryById,
+  updateCategory,
+} from './category_repository';
 
 const get = async (req, res) => {
   try {
     const { user_id } = req.app.locals;
 
     // Check role admin
-
     let user = await findUserById(user_id);
     if (Number(user.role) !== 1) {
       return ResponseHelper(res, 401, 'not allowed to access', [
@@ -23,19 +27,19 @@ const get = async (req, res) => {
     let requirement = {};
     if (search) requirement.search = search;
 
-    let tax = await findListTax(requirement, page, limit);
+    let category = await findListCategory(requirement, page, limit);
 
     const meta = {
       limit: limit,
       page: page,
-      total_page: Math.ceil(tax.count / limit),
-      total_data: tax.count,
+      total_page: Math.ceil(category.count / limit),
+      total_data: category.count,
     };
 
-    return ResponseHelper(res, 200, 'success get list data tax', tax.rows, meta);
+    return ResponseHelper(res, 200, 'success get list data category', category.rows, meta);
   } catch (error) {
     console.error(error);
-    return ResponseHelper(res, 500, 'failed get tax', error.message);
+    return ResponseHelper(res, 500, 'failed get category', error.message);
   }
 };
 
@@ -44,6 +48,7 @@ const add = async (req, res) => {
   if (!errors.isEmpty()) {
     return ResponseHelper(res, 422, 'Validation Error', errors.array());
   }
+
   try {
     const { user_id } = req.app.locals;
 
@@ -56,11 +61,11 @@ const add = async (req, res) => {
       ]);
     }
 
-    const tax = await createTax({ ...req.body });
-    return ResponseHelper(res, 201, 'success create new tax', tax);
+    const category = await createCategory({ ...req.body });
+    return ResponseHelper(res, 201, 'success create new category', category);
   } catch (error) {
     console.error(error);
-    return ResponseHelper(res, 500, 'failed create new tax', error.message);
+    return ResponseHelper(res, 500, 'failed create new category', error.message);
   }
 };
 
@@ -74,11 +79,11 @@ const update = async (req, res) => {
     const { id } = req.params;
     const { user_id } = req.app.locals;
 
-    // Check tax is exist
-    let checkTax = await findTaxById(id);
-    if (!checkTax) {
-      return ResponseHelper(res, 409, 'tax is not exist', [
-        { message: 'tax is not exist', param: 'id' },
+    // Check category is exist
+    let checkDiscount = await findCategoryById(id);
+    if (!checkDiscount) {
+      return ResponseHelper(res, 409, 'category is not exist', [
+        { message: 'category is not exist', param: 'id' },
       ]);
     }
 
@@ -91,15 +96,15 @@ const update = async (req, res) => {
       ]);
     }
 
-    // Update tax
-    await updateTax({ ...req.body }, { where: { id } });
+    // Update category
+    await updateDiscount({ ...req.body }, { where: { id } });
 
-    const result = await findTaxById(id);
+    const result = await findCategoryById(id);
 
-    return ResponseHelper(res, 201, 'success updated selected tax', result);
+    return ResponseHelper(res, 201, 'success updated selected category', result);
   } catch (error) {
     console.error(error);
-    return ResponseHelper(res, 500, 'failed updated selected tax', error.message);
+    return ResponseHelper(res, 500, 'failed updated selected category', error.message);
   }
 };
 
