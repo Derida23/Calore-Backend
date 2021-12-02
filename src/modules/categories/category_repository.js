@@ -27,11 +27,12 @@ const findOneCategory = async (filter) => {
 };
 
 // Find list category
-const findListCategory = async ({ search }, page, limit) => {
+const findListCategory = async ({ search, status }, page, limit) => {
   try {
     let result = await Categories.findAndCountAll({
       where: {
         name: search ? { [Op.like]: `%${search}%` } : { [Op.like]: `%%` },
+        status: status ? { [Op.like]: `%${status}%` } : { [Op.like]: `%%` },
       },
       offset: limit * (page - 1),
       limit: limit,

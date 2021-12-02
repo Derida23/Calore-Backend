@@ -27,11 +27,12 @@ const findOneDiscount = async (filter) => {
 };
 
 // Find list discount
-const findListDiscount = async ({ search }, page, limit) => {
+const findListDiscount = async ({ search, status }, page, limit) => {
   try {
     let result = await Discounts.findAndCountAll({
       where: {
         name: search ? { [Op.like]: `%${search}%` } : { [Op.like]: `%%` },
+        status: status ? { [Op.like]: `%${status}%` } : { [Op.like]: `%%` },
       },
       offset: limit * (page - 1),
       limit: limit,

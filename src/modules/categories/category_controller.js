@@ -21,11 +21,13 @@ const get = async (req, res) => {
     }
 
     const search = req.query.search || '';
+    const status = req.query.status || '';
     let page = parseInt(req.query.page || '1');
     let limit = parseInt(req.query.limit || '10');
 
     let requirement = {};
     if (search) requirement.search = search;
+    if (status) requirement.status = status;
 
     let category = await findListCategory(requirement, page, limit);
 
@@ -97,7 +99,7 @@ const update = async (req, res) => {
     }
 
     // Update category
-    await updateDiscount({ ...req.body }, { where: { id } });
+    await updateCategory({ ...req.body }, { where: { id } });
 
     const result = await findCategoryById(id);
 

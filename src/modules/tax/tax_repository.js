@@ -27,11 +27,12 @@ const findOneTax = async (filter) => {
 };
 
 // Find List Tax
-const findListTax = async ({ search }, page, limit) => {
+const findListTax = async ({ search, status }, page, limit) => {
   try {
     let result = await Taxs.findAndCountAll({
       where: {
         name: search ? { [Op.like]: `%${search}%` } : { [Op.like]: `%%` },
+        status: status ? { [Op.like]: `%${status}%` } : { [Op.like]: `%%` },
       },
       offset: limit * (page - 1),
       limit: limit,

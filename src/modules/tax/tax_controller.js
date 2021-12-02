@@ -17,11 +17,13 @@ const get = async (req, res) => {
     }
 
     const search = req.query.search || '';
+    const status = req.query.status || '';
     let page = parseInt(req.query.page || '1');
     let limit = parseInt(req.query.limit || '10');
 
     let requirement = {};
     if (search) requirement.search = search;
+    if (status) requirement.status = status;
 
     let tax = await findListTax(requirement, page, limit);
 
