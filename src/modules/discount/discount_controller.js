@@ -22,12 +22,14 @@ const get = async (req, res) => {
 
     const search = req.query.search || '';
     const status = req.query.status || '';
+    const type = req.query.type || '';
     let page = parseInt(req.query.page || '1');
     let limit = parseInt(req.query.limit || '10');
 
     let requirement = {};
     if (search) requirement.search = search;
     if (status) requirement.status = status;
+    if (type) requirement.type = type;
 
     let discount = await findListDiscount(requirement, page, limit);
 

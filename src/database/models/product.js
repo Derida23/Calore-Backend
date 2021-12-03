@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
         field: 'description',
       },
       image: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.TEXT,
         field: 'image',
       },
