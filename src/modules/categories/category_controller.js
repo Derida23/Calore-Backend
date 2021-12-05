@@ -82,8 +82,8 @@ const update = async (req, res) => {
     const { user_id } = req.app.locals;
 
     // Check category is exist
-    let checkDiscount = await findCategoryById(id);
-    if (!checkDiscount) {
+    let checkCategory = await findCategoryById(id);
+    if (!checkCategory) {
       return ResponseHelper(res, 409, 'category is not exist', [
         { message: 'category is not exist', param: 'id' },
       ]);

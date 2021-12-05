@@ -3,6 +3,7 @@ import ResponseHelper from '../../helpers/response_helper';
 import { findUserById } from '../user/user_repository';
 import {
   createProduct,
+  deleteProduct,
   findListProduct,
   findProductById,
   updateProduct,
@@ -73,14 +74,40 @@ const add = async (req, res) => {
     });
 
     upload(req, res, async (err) => {
+      const temporary = {
+        id: product.id,
+        product_code: product.product_code,
+        name: product.name,
+        description: product.description,
+        image: 'error image',
+        unit_in_stock: product.unit_in_stock,
+        unit_price: product.unit_price,
+        uom_id: product.uom_id,
+        category_id: product.category_id,
+        status: 2,
+        discount_id: product.discount_id,
+      };
+
       if (req.fileValidationError) {
+        await updateProduct({ ...temporary }, { where: { id: product.id } });
+        await deleteProduct(product.id);
+
         return ResponseHelper(res, 500, 'Failed to upload image', fileValidationError);
       } else if (!req.file) {
+        await updateProduct({ ...temporary }, { where: { id: product.id } });
+        await deleteProduct(product.id);
+
         return ResponseHelper(res, 500, 'Please select an image to upload');
       } else if (err instanceof multer.MulterError) {
-        return ResponseHelper(res, 500, 'err');
+        await updateProduct({ ...temporary }, { where: { id: product.id } });
+        await deleteProduct(product.id);
+
+        return ResponseHelper(res, 500, 'error multer');
       } else if (err) {
-        return ResponseHelper(res, 500, 'err');
+        await updateProduct({ ...temporary }, { where: { id: product.id } });
+        await deleteProduct(product.id);
+
+        return ResponseHelper(res, 500, 'error multer');
       }
 
       const vanilla = {
@@ -119,8 +146,9 @@ const update = async (req, res) => {
     const { user_id } = req.app.locals;
 
     // Check product is exist
-    let checkDiscount = await findProductById(id);
-    if (!checkDiscount) {
+    let product = await findProductById(id);
+
+    if (!product) {
       return ResponseHelper(res, 409, 'product is not exist', [
         { message: 'product is not exist', param: 'id' },
       ]);
@@ -135,12 +163,41 @@ const update = async (req, res) => {
       ]);
     }
 
-    // Update product
     await updateProduct({ ...req.body }, { where: { id } });
 
-    const result = await findProductById(id);
+    upload(req, res, async (err) => {
+      if (req.fileValidationError) {
+        return ResponseHelper(res, 500, 'Failed to upload image', fileValidationError);
+      } else if (!req.file) {
+        let result = await findProductById(product.id);
+        return ResponseHelper(res, 201, 'success updated selected product', result);
+      } else if (err instanceof multer.MulterError) {
+        return ResponseHelper(res, 500, 'error multer');
+      } else if (err) {
+        return ResponseHelper(res, 500, 'error multer');
+      }
 
-    return ResponseHelper(res, 201, 'success updated selected product', result);
+      const vanilla = {
+        id: product.id,
+        product_code: product.product_code,
+        name: product.name,
+        description: product.description,
+        image: req.file.filename,
+        unit_in_stock: product.unit_in_stock,
+        unit_price: product.unit_price,
+        uom_id: product.uom_id,
+        category_id: product.category_id,
+        status: product.status,
+        discount_id: product.discount_id,
+      };
+
+      await updateProduct({ ...vanilla }, { where: { id: product.id } });
+      let product_detail = await findProductById(product.id);
+
+      return ResponseHelper(res, 201, 'success updated selected product', product_detail);
+    });
+
+    // Update product
   } catch (error) {
     console.error(error);
     return ResponseHelper(res, 500, 'failed updated selected product', error.message);

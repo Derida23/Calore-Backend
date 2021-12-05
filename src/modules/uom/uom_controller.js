@@ -77,8 +77,8 @@ const update = async (req, res) => {
     const { user_id } = req.app.locals;
 
     // Check uom is exist
-    let checkDiscount = await findUomById(id);
-    if (!checkDiscount) {
+    let checkUom = await findUomById(id);
+    if (!checkUom) {
       return ResponseHelper(res, 409, 'uom is not exist', [
         { message: 'uom is not exist', param: 'id' },
       ]);

@@ -94,4 +94,26 @@ const updateProduct = async (data, filter, transaction) => {
   }
 };
 
-export { findProductById, findOneProduct, findListProduct, createProduct, updateProduct, upload };
+// Delete Product
+const deleteProduct = async (product_id, transaction) => {
+  const t = transaction ? transaction : await db.sequelize.transaction();
+  try {
+    let result = await Products.destroy({ where: { id: product_id }, transaction });
+    if (!transaction) t.commit();
+    return result;
+  } catch (error) {
+    if (!transaction) t.rollback();
+    console.error('[EXCEPTION] deleteProduct', error);
+    throw new Error(error);
+  }
+};
+
+export {
+  findProductById,
+  findOneProduct,
+  findListProduct,
+  createProduct,
+  updateProduct,
+  upload,
+  deleteProduct,
+};

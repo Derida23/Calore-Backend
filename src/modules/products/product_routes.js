@@ -6,7 +6,9 @@ import { upload } from './product_repository';
 const ProductRoutes = (app, prefix) => {
   app.route(`${prefix}/product`).get(AuthMiddleware, get);
   app.route(`${prefix}/product/add`).post(AuthMiddleware, validator('product'), upload, add);
-  app.route(`${prefix}/product/update/:id`).patch(AuthMiddleware, validator('product'), update);
+  app
+    .route(`${prefix}/product/update/:id`)
+    .patch(AuthMiddleware, validator('product'), upload, update);
 };
 
 export { ProductRoutes };
