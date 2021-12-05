@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       type: {
         allowNull: false,
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.INTEGER,
         field: 'type',
       },
       remark: {
@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       status: {
         allowNull: false,
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.INTEGER,
         field: 'status',
       },
       reason: {

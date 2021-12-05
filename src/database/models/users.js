@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       role: {
         allowNull: false,
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.INTEGER,
         defaultValue: 2,
         field: 'role',
       },

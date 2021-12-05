@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       type: {
         allowNull: false,
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.INTEGER,
         field: 'type',
       },
       status: {
