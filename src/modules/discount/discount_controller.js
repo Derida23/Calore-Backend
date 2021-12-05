@@ -10,16 +10,6 @@ import {
 
 const get = async (req, res) => {
   try {
-    const { user_id } = req.app.locals;
-
-    // Check role admin
-    let user = await findUserById(user_id);
-    if (Number(user.role) !== 1) {
-      return ResponseHelper(res, 401, 'not allowed to access', [
-        { message: 'not allowed to access', param: 'id' },
-      ]);
-    }
-
     const search = req.query.search || '';
     const status = req.query.status || '';
     const type = req.query.type || '';

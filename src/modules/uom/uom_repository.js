@@ -2,7 +2,7 @@ import db from '../../database/models';
 const { Uoms } = db;
 import { Op } from 'sequelize';
 
-// Find one discount by id
+// Find one uom by id
 const findUomById = async (id) => {
   try {
     let result = await Uoms.findByPk(id);
@@ -13,7 +13,7 @@ const findUomById = async (id) => {
   }
 };
 
-// Find one discount by filter
+// Find one uom by filter
 const findOneUom = async (filter) => {
   try {
     let result = await Uoms.findOne({
@@ -26,7 +26,7 @@ const findOneUom = async (filter) => {
   }
 };
 
-// Find list discount
+// Find list uom
 const findListUom = async ({ search, status }, page, limit) => {
   try {
     let result = await Uoms.findAndCountAll({
@@ -44,7 +44,7 @@ const findListUom = async ({ search, status }, page, limit) => {
   }
 };
 
-// Create new discount
+// Create new uom
 const createUom = async (data, transaction) => {
   const t = transaction ? transaction : await db.sequelize.transaction();
   try {
@@ -58,7 +58,7 @@ const createUom = async (data, transaction) => {
   }
 };
 
-// Update Discount
+// Update uom
 const updateUom = async (data, filter, transaction) => {
   const t = transaction ? transaction : await db.sequelize.transaction();
   try {

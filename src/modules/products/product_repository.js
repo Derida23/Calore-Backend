@@ -5,7 +5,7 @@ import multer from 'multer';
 import path from 'path';
 import { imageFilter } from '../../helpers/images';
 
-// Find one discount by id
+// Find one product by id
 const findProductById = async (id) => {
   try {
     let result = await Products.findByPk(id);
@@ -16,7 +16,7 @@ const findProductById = async (id) => {
   }
 };
 
-// Find one discount by filter
+// Find one product by filter
 const findOneProduct = async (filter) => {
   try {
     let result = await Products.findOne({
@@ -29,7 +29,7 @@ const findOneProduct = async (filter) => {
   }
 };
 
-// Find list discount
+// Find list product
 const findListProduct = async ({ search, status, category_id }, page, limit) => {
   try {
     let result = await Products.findAndCountAll({
@@ -41,7 +41,7 @@ const findListProduct = async ({ search, status, category_id }, page, limit) => 
       include: [
         {
           model: Uoms,
-          as: 'uoms',
+          as: 'uom',
           attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
         },
         {
@@ -83,7 +83,7 @@ const upload = multer({
   fileFilter: imageFilter,
 }).single('image');
 
-// Create new discount
+// Create new product
 const createProduct = async (data, transaction) => {
   const t = transaction ? transaction : await db.sequelize.transaction();
   try {
@@ -97,7 +97,7 @@ const createProduct = async (data, transaction) => {
   }
 };
 
-// Update Discount
+// Update product
 const updateProduct = async (data, filter, transaction) => {
   const t = transaction ? transaction : await db.sequelize.transaction();
   try {

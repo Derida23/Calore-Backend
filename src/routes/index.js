@@ -7,6 +7,7 @@ import { UomRoutes } from '../modules/uom/uom_routes';
 import { CategoryRoutes } from '../modules/categories/category_routes';
 import { AddressRoutes } from '../modules/address/address_routes';
 import { ProductRoutes } from '../modules/products/product_routes';
+import { OrderRoutes } from '../modules/orders/order_routes';
 
 const MainRoutes = (app) => {
   // Test the connection api
@@ -39,6 +40,9 @@ const MainRoutes = (app) => {
 
   // product routes
   ProductRoutes(app, prefix);
+
+  // order routes
+  OrderRoutes(app, prefix);
 };
 
 export default MainRoutes;

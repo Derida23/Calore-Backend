@@ -1,25 +1,16 @@
 import { validationResult } from 'express-validator';
 import ResponseHelper from '../../helpers/response_helper';
-import { findUserById } from '../user/user_repository';
 import {
-  createDiscount,
-  findListDiscount,
-  findDiscountById,
-  updateDiscount,
+  createOrder,
+  findListOrder,
+  findOrderById,
+  findOrderDetail,
+  updateOrder,
 } from './order_repository';
 
 const get = async (req, res) => {
   try {
-    const { user_id } = req.app.locals;
-
-    // Check role admin
-    let user = await findUserById(user_id);
-    if (Number(user.role) !== 1) {
-      return ResponseHelper(res, 401, 'not allowed to access', [
-        { message: 'not allowed to access', param: 'id' },
-      ]);
-    }
-
+    const order_number = req.query.order_number || '';
     const search = req.query.search || '';
     const status = req.query.status || '';
     const type = req.query.type || '';
@@ -27,23 +18,51 @@ const get = async (req, res) => {
     let limit = parseInt(req.query.limit || '10');
 
     let requirement = {};
+    if (order_number) requirement.order_number = order_number;
     if (search) requirement.search = search;
     if (status) requirement.status = status;
     if (type) requirement.type = type;
 
-    let discount = await findListDiscount(requirement, page, limit);
+    let order = await findListOrder(requirement, page, limit);
 
     const meta = {
       limit: limit,
       page: page,
-      total_page: Math.ceil(discount.count / limit),
-      total_data: discount.count,
+      total_page: Math.ceil(order.count / limit),
+      total_data: order.count,
     };
 
-    return ResponseHelper(res, 200, 'success get list data discount', discount.rows, meta);
+    return ResponseHelper(res, 200, 'success get list data order', order.rows, meta);
   } catch (error) {
     console.error(error);
-    return ResponseHelper(res, 500, 'failed get discount', error.message);
+    return ResponseHelper(res, 500, 'failed get order', error.message);
+  }
+};
+
+const getDetail = async (req, res) => {
+  try {
+    const order_id = req.query.order_id || '';
+    const search = req.query.search || '';
+    let page = parseInt(req.query.page || '1');
+    let limit = parseInt(req.query.limit || '10');
+
+    let requirement = {};
+    if (order_id) requirement.order_id = order_id;
+    if (search) requirement.search = search;
+
+    let order = await findOrderDetail(requirement);
+
+    const meta = {
+      limit: limit,
+      page: page,
+      total_page: Math.ceil(order.count / limit),
+      total_data: order.count,
+    };
+
+    return ResponseHelper(res, 200, 'success get list data order detail', order.rows, meta);
+  } catch (error) {
+    console.error(error);
+    return ResponseHelper(res, 500, 'failed get order detail', error.message);
   }
 };
 
@@ -54,22 +73,11 @@ const add = async (req, res) => {
   }
 
   try {
-    const { user_id } = req.app.locals;
-
-    // Check role admin
-    let user = await findUserById(user_id);
-
-    if (Number(user.role) !== 1) {
-      return ResponseHelper(res, 401, 'not allowed to access', [
-        { message: 'not allowed to access', param: 'id' },
-      ]);
-    }
-
-    const discount = await createDiscount({ ...req.body });
-    return ResponseHelper(res, 201, 'success create new discount', discount);
+    const order = await createOrder({ ...req.body });
+    return ResponseHelper(res, 201, 'success create new order', order);
   } catch (error) {
     console.error(error);
-    return ResponseHelper(res, 500, 'failed create new discount', error.message);
+    return ResponseHelper(res, 500, 'failed create new order', error.message);
   }
 };
 
@@ -81,35 +89,25 @@ const update = async (req, res) => {
 
   try {
     const { id } = req.params;
-    const { user_id } = req.app.locals;
 
-    // Check discount is exist
-    let checkDiscount = await findDiscountById(id);
+    // Check order is exist
+    let checkDiscount = await findOrderById(id);
     if (!checkDiscount) {
-      return ResponseHelper(res, 409, 'discount is not exist', [
-        { message: 'discount is not exist', param: 'id' },
+      return ResponseHelper(res, 409, 'order is not exist', [
+        { message: 'order is not exist', param: 'id' },
       ]);
     }
 
-    // Check role admin
-    let user = await findUserById(user_id);
+    // Update order
+    await updateOrder({ ...req.body }, { where: { id } });
 
-    if (Number(user.role) !== 1) {
-      return ResponseHelper(res, 401, 'not allowed to access', [
-        { message: 'not allowed to access', param: 'id' },
-      ]);
-    }
+    const result = await findOrderById(id);
 
-    // Update discount
-    await updateDiscount({ ...req.body }, { where: { id } });
-
-    const result = await findDiscountById(id);
-
-    return ResponseHelper(res, 201, 'success updated selected discount', result);
+    return ResponseHelper(res, 201, 'success updated selected order', result);
   } catch (error) {
     console.error(error);
-    return ResponseHelper(res, 500, 'failed updated selected discount', error.message);
+    return ResponseHelper(res, 500, 'failed updated selected order', error.message);
   }
 };
 
-export { get, add, update };
+export { get, add, getDetail, update };
