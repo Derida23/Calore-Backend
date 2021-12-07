@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
         field: 'remark',
       },
       status: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.INTEGER,
         field: 'status',
       },

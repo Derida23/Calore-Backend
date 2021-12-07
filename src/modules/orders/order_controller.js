@@ -7,6 +7,9 @@ import {
   findOrderDetail,
   updateOrder,
 } from './order_repository';
+import { findProductById } from '../products/product_repository';
+import { findDiscountById } from '../discount/discount_repository';
+import { v4 as uuidv4 } from 'uuid';
 
 const get = async (req, res) => {
   try {
@@ -41,7 +44,7 @@ const get = async (req, res) => {
 
 const getDetail = async (req, res) => {
   try {
-    const order_id = req.query.order_id || '';
+    const order_id = req.params.id || '';
     const search = req.query.search || '';
     let page = parseInt(req.query.page || '1');
     let limit = parseInt(req.query.limit || '10');
@@ -53,13 +56,13 @@ const getDetail = async (req, res) => {
     let order = await findOrderDetail(requirement);
 
     const meta = {
-      limit: limit,
-      page: page,
-      total_page: Math.ceil(order.count / limit),
-      total_data: order.count,
+      limit: order.length,
+      page: 1,
+      total_page: 1,
+      total_data: order.length,
     };
 
-    return ResponseHelper(res, 200, 'success get list data order detail', order.rows, meta);
+    return ResponseHelper(res, 200, 'success get list data order detail', order, meta);
   } catch (error) {
     console.error(error);
     return ResponseHelper(res, 500, 'failed get order detail', error.message);
@@ -67,13 +70,60 @@ const getDetail = async (req, res) => {
 };
 
 const add = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return ResponseHelper(res, 422, 'Validation Error', errors.array());
-  }
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   return ResponseHelper(res, 422, 'Validation Error', errors.array());
+  // }
 
   try {
-    const order = await createOrder({ ...req.body });
+    const { user_id } = req.app.locals;
+
+    let productDb = [];
+    let discDb = [];
+    let items = [];
+    let listOrder = await findListOrder({}, 1, 1);
+
+    for (let it of req.body.items) {
+      let temporary = await findProductById(it.product_id);
+      productDb.push(temporary);
+    }
+
+    for (let it of req.body.items) {
+      let temporary = await findDiscountById(it.discount_id);
+      discDb.push(temporary);
+    }
+
+    for (let [index, it] of req.body.items.entries()) {
+      items.push({
+        order_id: listOrder.count + 1,
+        product_id: it.product_id,
+        qty: it.qty,
+        price: productDb[index].unit_price,
+        subtotal: productDb[index].unit_price * it.qty,
+        discount_id: it.discount_id,
+        total: discDb[index]
+          ? (productDb[index].unit_price -
+              (discDb[index].percentage / 100) * productDb[index].unit_price) *
+            it.qty
+          : productDb[index].unit_price * it.qty,
+      });
+    }
+
+    let total = items.reduce((a, b) => a + b.total, 0);
+
+    const vanilla = {
+      order_number: uuidv4(),
+      name: req.body.name,
+      user_id,
+      type: req.body.type,
+      remark: req.body.remark,
+      reason: req.body.reason,
+      total,
+      tax_id: req.body.tax_id,
+      discount_id: req.body.discount_id,
+    };
+
+    const order = await createOrder({ ...vanilla }, items);
     return ResponseHelper(res, 201, 'success create new order', order);
   } catch (error) {
     console.error(error);

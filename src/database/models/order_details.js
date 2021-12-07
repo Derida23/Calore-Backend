@@ -42,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         field: 'qty',
       },
+      price: {
+        allowNull: false,
+        type: DataTypes.DECIMAL(25, 2),
+        field: 'price',
+      },
       subtotal: {
         allowNull: false,
         type: DataTypes.DECIMAL(25, 2),

@@ -101,10 +101,11 @@ const findOrderDetail = async ({ order_id, search }) => {
 };
 
 // Create new order
-const createOrder = async (data, transaction) => {
+const createOrder = async (data, items, transaction) => {
   const t = transaction ? transaction : await db.sequelize.transaction();
   try {
     let result = await Orders.create(data, { transaction });
+    await OrderDetails.bulkCreate(items, { transaction });
     if (!transaction) t.commit();
     return result;
   } catch (error) {
