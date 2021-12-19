@@ -115,7 +115,7 @@ const updateProduct = async (data, filter, transaction) => {
 const deleteProduct = async (product_id, transaction) => {
   const t = transaction ? transaction : await db.sequelize.transaction();
   try {
-    let result = await Products.destroy({ where: { id: product_id }, transaction });
+    let result = await Products.destroy({ where: { id: product_id }, force: true, transaction });
     if (!transaction) t.commit();
     return result;
   } catch (error) {

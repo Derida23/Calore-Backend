@@ -116,10 +116,18 @@ const createOrder = async (data, items, transaction) => {
 };
 
 // Update order
-const updateOrder = async (data, filter, transaction) => {
+const updateOrder = async (data, items, filter, transaction) => {
   const t = transaction ? transaction : await db.sequelize.transaction();
   try {
     let result = await Orders.update(data, { ...filter, transaction });
+    await OrderDetails.bulkCreate(
+      items,
+      {
+        updateOnDuplicate: ['product_id', 'qty', 'price', 'subtotal', 'discount_id', 'total'],
+        force: true,
+      },
+      { transaction }
+    );
     if (!transaction) t.commit();
     return result;
   } catch (error) {

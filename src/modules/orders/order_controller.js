@@ -46,8 +46,6 @@ const getDetail = async (req, res) => {
   try {
     const order_id = req.params.id || '';
     const search = req.query.search || '';
-    let page = parseInt(req.query.page || '1');
-    let limit = parseInt(req.query.limit || '10');
 
     let requirement = {};
     if (order_id) requirement.order_id = order_id;
@@ -95,7 +93,7 @@ const add = async (req, res) => {
 
     for (let [index, it] of req.body.items.entries()) {
       items.push({
-        order_id: listOrder.count + 1,
+        order_id: listOrder.count === 0 ? listOrder.count + 1 : listOrder.count,
         product_id: it.product_id,
         qty: it.qty,
         price: productDb[index].unit_price,
@@ -132,24 +130,86 @@ const add = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return ResponseHelper(res, 422, 'Validation Error', errors.array());
-  }
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   return ResponseHelper(res, 422, 'Validation Error', errors.array());
+  // }
 
   try {
     const { id } = req.params;
+    const { user_id } = req.app.locals;
 
-    // Check order is exist
-    let checkDiscount = await findOrderById(id);
-    if (!checkDiscount) {
-      return ResponseHelper(res, 409, 'order is not exist', [
-        { message: 'order is not exist', param: 'id' },
-      ]);
+    let productDb = [];
+    let discDb = [];
+    let items = [];
+    let order = await findOrderById(id);
+
+    const order_id = req.params.id || '';
+
+    let requirement = {};
+    if (order_id) requirement.order_id = order_id;
+
+    let list = await findOrderDetail(requirement);
+
+    let temporary = [];
+    for (let [, it] of list.entries()) {
+      temporary.push({
+        id: it.id,
+        order_id: it.order_id,
+        product_id: it.product_id,
+        qty: it.qty,
+        price: it.price,
+        subtotal: it.subtotal,
+        discount_id: it.discount_id,
+        total: it.total,
+      });
     }
 
+    for (let it of req.body.items) {
+      let temporary = await findProductById(it.product_id);
+      productDb.push(temporary);
+    }
+
+    for (let it of req.body.items) {
+      let temporary = await findDiscountById(it.discount_id);
+      discDb.push(temporary);
+    }
+
+    for (let [index, it] of req.body.items.entries()) {
+      items.push({
+        id: it.id,
+        order_id: id,
+        product_id: it.product_id,
+        qty: it.qty,
+        price: productDb[index].unit_price,
+        subtotal: productDb[index].unit_price * it.qty,
+        discount_id: it.discount_id,
+        total: discDb[index]
+          ? (productDb[index].unit_price -
+              (discDb[index].percentage / 100) * productDb[index].unit_price) *
+            it.qty
+          : productDb[index].unit_price * it.qty,
+      });
+    }
+
+    let total = items.reduce((a, b) => a + b.total, 0);
+    let updateList = [...temporary, ...items];
+    // console.log(updateList);
+
+    const vanilla = {
+      order_number: order.order_number,
+      name: req.body.name,
+      user_id,
+      type: req.body.type,
+      remark: req.body.remark,
+      reason: req.body.reason,
+      total,
+      tax_id: req.body.tax_id,
+      discount_id: req.body.discount_id,
+    };
+
     // Update order
-    await updateOrder({ ...req.body }, { where: { id } });
+    await updateOrder({ ...vanilla }, items, { where: { id } });
 
     const result = await findOrderById(id);
 

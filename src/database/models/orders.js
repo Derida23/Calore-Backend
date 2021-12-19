@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.BIGINT(20),
+        unique: true,
       },
       order_number: {
         allowNull: false,
