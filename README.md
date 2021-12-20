@@ -25,12 +25,12 @@ This repository is inspired by <a href="https://github.com/aldoignatachandra/tec
 
 ## Get Started
 1. Clone repository
-2. Import Database from docs > db > db_calore.sql or download [Database Calore](https://github.com/Derida23/Calore-Backend/tree/production/docs/db)
+2. Import Database from `docs > db > db_calore.sql` or download [Database Calore](https://github.com/Derida23/Calore-Backend/tree/production/docs/db)
 3. Setup ENV File
 4. Open Command or Terminal and Write **yarn dev**
 
 
-## List API ( DOCS )
+## API Documentation
 1. Copy json file from `docs` to your machine
 2. Import Json file to your postman Collections
 
