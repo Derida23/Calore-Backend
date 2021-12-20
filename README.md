@@ -11,48 +11,52 @@ This repository is inspired by <a href="https://github.com/aldoignatachandra/tec
 </p>
 
 
-### Requirments
-
+## Requirments
 - **yarn** v1.17+
 - **NodeJS** v8+
 - **Sequelize** v6+
 
-### Backend Technology Stack
-
+## Backend Technology Stack
 1. **JavaScript**
 2. **NodeJS** with **Express.js** framework
 3. **REST API**
 4. **MySQL** database
 5. **Sequelize** ORM
 
-### Features
+## Get Started
+1. Clone repository
+2. Import Database from docs > db > db_calore.sql or download [Database Calore](https://github.com/Derida23/Calore-Backend/tree/production/docs/db)
+3. Setup ENV File
+4. Open Command or Terminal and Write **yarn dev**
 
-<b>1. Authentication </b>
- - Login
- - Register (Admin / Cashier)
 
-<b>2. User </b>
- - Get Profile
- - Update Profile
- - [Admin] Update Profile
- 
-<b>3. Data Master [Admin] </b>
- - Tax
- - Discount
- - UoM
- - Address
- - Category
- - note : cashier role only <b>Get Method</b>
- 
-<b>4. Product </b>
-- Get Product
-- [Admin] Add Product
-- [Admin] Update Product
+## List API ( DOCS )
+1. Copy json file from `docs` to your machine
+2. Import Json file to your postman Collections
 
-<b>5. Order </b>
-- Get Order
-- Get Order Detail
-- Add Order
-- Update Order
+## Features
+| Authentication | User |
+| --- | --- |
+| - Login | - Get Profile |
+| - Register Role (Admin / Cashier) | - Update Profile (Admin / Cashier) |
+
  
- 
+| Data Master | Data Master |
+| --- | --- |
+| - Tax | - Address |
+| - Discount | - Category |
+| - UoM |  - Cashier Only Access <b>Get method</b> |
+
+
+| Product | Product |
+| --- | --- |
+| - [Admin] Add Product | - Get Product |
+| - [Admin] Update Product |  |
+
+
+| Order | Order |
+| --- | --- |
+| - Get Order | - Add Order |
+| - Get Order Detail | - Update Order |
+
+If you have a problem you can put it in the issue or contact me via the email listed on the profile
