@@ -5,7 +5,6 @@ const validate = (method) => {
     case 'register': {
       return [
         body('email').not().isEmpty().withMessage('email can not be empty'),
-        body('email').isEmail().withMessage('email does not match the format'),
         body('password').not().isEmpty().withMessage('password can not be empty'),
         body('confirm_password').not().isEmpty().withMessage('confirm password can not be empty'),
         body('role').not().isEmpty().withMessage('role can not be empty'),
@@ -20,7 +19,6 @@ const validate = (method) => {
     case 'login': {
       return [
         body('email').not().isEmpty().withMessage('email can not be empty'),
-        body('email').isEmail().withMessage('email does not match the format'),
         body('password').not().isEmpty().withMessage('password can not be empty'),
       ];
     }

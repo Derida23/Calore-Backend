@@ -7,6 +7,7 @@
  * 404 Data not found
  * 500 Failed retrive api
  * 409 If Data is Exist
+ * 422 Error validasi
  *
  */
 
