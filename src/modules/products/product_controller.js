@@ -187,38 +187,56 @@ const update = async (req, res) => {
 
     await updateProduct({ ...req.body }, { where: { id } });
 
-    upload(req, res, async (err) => {
-      if (req.fileValidationError) {
-        return ResponseHelper(res, 500, 'Failed to upload image', fileValidationError);
-      } else if (!req.file) {
-        let result = await findProductById(product.id);
+    if (mode === 'DEVELOPMENT') {
+      upload(req, res, async (err) => {
+        if (req.fileValidationError) {
+          return ResponseHelper(res, 500, 'Failed to upload image', fileValidationError);
+        } else if (!req.file) {
+          let result = await findProductById(product.id);
+          return ResponseHelper(res, 201, 'success updated selected product', result);
+        } else if (err instanceof multer.MulterError) {
+          return ResponseHelper(res, 500, 'error multer');
+        } else if (err) {
+          return ResponseHelper(res, 500, 'error multer');
+        }
+
+        const vanilla = {
+          id: product.id,
+          product_code: product.product_code,
+          name: product.name,
+          description: product.description,
+          image: req.file.filename,
+          unit_in_stock: product.unit_in_stock,
+          unit_price: product.unit_price,
+          uom_id: product.uom_id,
+          category_id: product.category_id,
+          status: product.status,
+          discount_id: product.discount_id,
+        };
+
+        await updateProduct({ ...vanilla }, { where: { id: product.id } });
+        let product_detail = await findProductById(product.id);
+
+        return ResponseHelper(res, 201, 'success updated selected product', product_detail);
+      });
+    } else if (mode === 'PRODUCTION') {
+      if (!req.file) {
+        let result = await findProductById(id);
         return ResponseHelper(res, 201, 'success updated selected product', result);
-      } else if (err instanceof multer.MulterError) {
-        return ResponseHelper(res, 500, 'error multer');
-      } else if (err) {
-        return ResponseHelper(res, 500, 'error multer');
+      } else {
+        const deleter = await cloudinary.delete(product.image);
+        const uploader = await cloudinary.uploads(req.file.path);
+
+        if (deleter.status === 202 && uploader.status === 202) {
+          await updateProduct({ ...req.body, image: uploader.data }, { where: { id: product.id } });
+          let product_detail = await findProductById(id);
+
+          return ResponseHelper(res, 201, 'success updated selected product', product_detail);
+        } else {
+          return ResponseHelper(res, 500, 'error change image cloudinary');
+        }
       }
-
-      const vanilla = {
-        id: product.id,
-        product_code: product.product_code,
-        name: product.name,
-        description: product.description,
-        image: req.file.filename,
-        unit_in_stock: product.unit_in_stock,
-        unit_price: product.unit_price,
-        uom_id: product.uom_id,
-        category_id: product.category_id,
-        status: product.status,
-        discount_id: product.discount_id,
-      };
-
-      await updateProduct({ ...vanilla }, { where: { id: product.id } });
-      let product_detail = await findProductById(product.id);
-
-      return ResponseHelper(res, 201, 'success updated selected product', product_detail);
-    });
-
+    }
     // Update product
   } catch (error) {
     console.error(error);
