@@ -9,4 +9,8 @@ module.exports = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   jwtSecret: process.env.JWT_SECRET,
+  cloudName: process.env.CLOUD_NAME,
+  apiKey: process.env.API_KEY,
+  cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,
+  mode: process.env.MODE,
 };

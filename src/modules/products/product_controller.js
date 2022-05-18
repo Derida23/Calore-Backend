@@ -11,6 +11,8 @@ import {
 } from './product_repository';
 import { v4 as uuidv4 } from 'uuid';
 import multer from 'multer';
+import { mode } from '../../config/env';
+import cloudinary from '../../middlewares/cloudinary';
 
 const get = async (req, res) => {
   try {
@@ -63,62 +65,92 @@ const add = async (req, res) => {
       product_code: uuidv4(),
     });
 
-    upload(req, res, async (err) => {
-      const temporary = {
-        id: product.id,
-        product_code: product.product_code,
-        name: product.name,
-        description: product.description,
-        image: 'error image',
-        unit_in_stock: product.unit_in_stock,
-        unit_price: product.unit_price,
-        uom_id: product.uom_id,
-        category_id: product.category_id,
-        status: 2,
-        discount_id: product.discount_id,
-      };
+    if (mode === 'DEVELOPMENT') {
+      upload(req, res, async (err) => {
+        const temporary = {
+          id: product.id,
+          product_code: product.product_code,
+          name: product.name,
+          description: product.description,
+          image: 'error image',
+          unit_in_stock: product.unit_in_stock,
+          unit_price: product.unit_price,
+          uom_id: product.uom_id,
+          category_id: product.category_id,
+          status: 2,
+          discount_id: product.discount_id,
+        };
 
-      if (req.fileValidationError) {
+        if (req.fileValidationError) {
+          await updateProduct({ ...temporary }, { where: { id: product.id } });
+          await deleteProduct(product.id);
+
+          return ResponseHelper(res, 500, 'Failed to upload image', fileValidationError);
+        } else if (!req.file) {
+          await updateProduct({ ...temporary }, { where: { id: product.id } });
+          await deleteProduct(product.id);
+
+          return ResponseHelper(res, 500, 'Please select an image to upload');
+        } else if (err instanceof multer.MulterError) {
+          await updateProduct({ ...temporary }, { where: { id: product.id } });
+          await deleteProduct(product.id);
+
+          return ResponseHelper(res, 500, 'error multer');
+        } else if (err) {
+          await updateProduct({ ...temporary }, { where: { id: product.id } });
+          await deleteProduct(product.id);
+
+          return ResponseHelper(res, 500, 'error multer');
+        }
+
+        const vanilla = {
+          id: product.id,
+          product_code: product.product_code,
+          name: product.name,
+          description: product.description,
+          image: req.file.filename,
+          unit_in_stock: product.unit_in_stock,
+          unit_price: product.unit_price,
+          uom_id: product.uom_id,
+          category_id: product.category_id,
+          status: product.status,
+          discount_id: product.discount_id,
+        };
+
+        await updateProduct({ ...vanilla }, { where: { id: product.id } });
+        let product_detail = await findProductById(product.id);
+
+        return ResponseHelper(res, 201, 'success create new product', product_detail);
+      });
+    } else if (mode === 'PRODUCTION') {
+      const result = await cloudinary.uploads(req.file.path);
+
+      if (result.status === 202) {
+        const vanilla = {
+          id: product.id,
+          product_code: product.product_code,
+          name: product.name,
+          description: product.description,
+          image: result.data,
+          unit_in_stock: product.unit_in_stock,
+          unit_price: product.unit_price,
+          uom_id: product.uom_id,
+          category_id: product.category_id,
+          status: product.status,
+          discount_id: product.discount_id,
+        };
+
+        await updateProduct({ ...vanilla }, { where: { id: product.id } });
+        let product_detail = await findProductById(product.id);
+
+        return ResponseHelper(res, 201, 'success create new product', product_detail);
+      } else {
         await updateProduct({ ...temporary }, { where: { id: product.id } });
         await deleteProduct(product.id);
 
-        return ResponseHelper(res, 500, 'Failed to upload image', fileValidationError);
-      } else if (!req.file) {
-        await updateProduct({ ...temporary }, { where: { id: product.id } });
-        await deleteProduct(product.id);
-
-        return ResponseHelper(res, 500, 'Please select an image to upload');
-      } else if (err instanceof multer.MulterError) {
-        await updateProduct({ ...temporary }, { where: { id: product.id } });
-        await deleteProduct(product.id);
-
-        return ResponseHelper(res, 500, 'error multer');
-      } else if (err) {
-        await updateProduct({ ...temporary }, { where: { id: product.id } });
-        await deleteProduct(product.id);
-
-        return ResponseHelper(res, 500, 'error multer');
+        return ResponseHelper(res, 500, 'error upload image cloudinary');
       }
-
-      const vanilla = {
-        id: product.id,
-        product_code: product.product_code,
-        name: product.name,
-        description: product.description,
-        image: req.file.filename,
-        unit_in_stock: product.unit_in_stock,
-        unit_price: product.unit_price,
-        uom_id: product.uom_id,
-        category_id: product.category_id,
-        status: product.status,
-        discount_id: product.discount_id,
-      };
-
-      await updateProduct({ ...vanilla }, { where: { id: product.id } });
-      let product_detail = await findProductById(product.id);
-
-      return ResponseHelper(res, 201, 'success create new product', product_detail);
-    });
+    }
   } catch (error) {
     console.error(error);
     return ResponseHelper(res, 500, 'failed create new product', error.message);
