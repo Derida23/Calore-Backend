@@ -15,6 +15,9 @@
     "db:reset": "npm run db:drop && npm run db:create && npm run db:migrate && npm run db:seed",
     "stop": "sudo kill -9 $(sudo lsof -t -i:4000)"
   },
+  "keywords": [
+    "heroku"
+  ],
   "devDependencies": {
     "nodemon": "^2.0.12",
     "prettier": "^2.3.2",
@@ -40,5 +43,8 @@
     "sequelize": "^6.6.5",
     "streamifier": "^0.1.1",
     "uuid": "^8.3.2"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }
