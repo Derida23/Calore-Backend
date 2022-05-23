@@ -2,8 +2,8 @@ import express from 'express';
 import logger from 'morgan';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import MainRoutes from './routes/index';
-import { port, appUrl } from './config/env';
+import MainRoutes from './src/routes/index';
+import { port, appUrl } from './src/config/env';
 
 const app = express();
 
