@@ -22,12 +22,15 @@ This repository is inspired by <a href="https://github.com/aldoignatachandra/tec
 3. **REST API**
 4. **MySQL** database
 5. **Sequelize** ORM
+6. **Cloudinary** 
 
 ## Get Started
 1. Clone repository
 2. Import Database from `docs > db > db_calore.sql` or download [Database Calore](https://github.com/Derida23/Calore-Backend/tree/production/docs/db)
-3. Setup ENV File
-4. Open Command or Terminal and Write **yarn dev**
+3. Setup ENV File (read env example for setup)
+4. Open Command or Terminal and Write **yarn install**
+5. Create **Cloudinary** account to generate key to setup in ENV
+6. Write **yarn dev** in terminal
 
 
 ## API Documentation
