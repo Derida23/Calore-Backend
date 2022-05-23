@@ -6,7 +6,7 @@
   "author": "arian derida hamami",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node --presets=@babel/preset-env app.js",
+    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node --presets=@babel/preset-env ./src/app.js",
     "db:drop": "npx sequelize-cli db:drop",
     "db:create": "npx sequelize-cli db:create",
     "db:migrate": "npx sequelize-cli db:migrate",
