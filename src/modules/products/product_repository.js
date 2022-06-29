@@ -1,5 +1,5 @@
 import db from '../../database/models';
-const { Products, Uoms, Categories, Discounts } = db;
+const { Products, Categories, Discounts } = db;
 import { Op } from 'sequelize';
 import multer from 'multer';
 import path from 'path';
@@ -39,11 +39,6 @@ const findListProduct = async ({ search, status, category_id }, page, limit) => 
         category_id: category_id ? { [Op.like]: `%${category_id}%` } : { [Op.like]: `%%` },
       },
       include: [
-        {
-          model: Uoms,
-          as: 'uom',
-          attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
-        },
         {
           model: Categories,
           as: 'category',
