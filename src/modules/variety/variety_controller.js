@@ -1,7 +1,12 @@
 import { validationResult } from 'express-validator';
 import ResponseHelper from '../../helpers/response_helper';
 import { findUserById } from '../user/user_repository';
-import { createUom, findListUom, findUomById, updateUom } from './uom_repository';
+import {
+  createVariety,
+  findListVariety,
+  findVarietyById,
+  updateVariety,
+} from './variety_repository';
 
 const get = async (req, res) => {
   try {
@@ -14,19 +19,19 @@ const get = async (req, res) => {
     if (search) requirement.search = search;
     if (status) requirement.status = status;
 
-    let uom = await findListUom(requirement, page, limit);
+    let variety = await findListVariety(requirement, page, limit);
 
     const meta = {
       limit: limit,
       page: page,
-      total_page: Math.ceil(uom.count / limit),
-      total_data: uom.count,
+      total_page: Math.ceil(variety.count / limit),
+      total_data: variety.count,
     };
 
-    return ResponseHelper(res, 200, 'success get list data uom', uom.rows, meta);
+    return ResponseHelper(res, 200, 'success get list data variety', variety.rows, meta);
   } catch (error) {
     console.error(error);
-    return ResponseHelper(res, 500, 'failed get uom', error.message);
+    return ResponseHelper(res, 500, 'failed get variety', error.message);
   }
 };
 
@@ -48,11 +53,11 @@ const add = async (req, res) => {
       ]);
     }
 
-    const uom = await createUom({ ...req.body });
-    return ResponseHelper(res, 201, 'success create new uom', uom);
+    const variety = await createVariety({ ...req.body });
+    return ResponseHelper(res, 201, 'success create new variety', variety);
   } catch (error) {
     console.error(error);
-    return ResponseHelper(res, 500, 'failed create new uom', error.message);
+    return ResponseHelper(res, 500, 'failed create new variety', error.message);
   }
 };
 
@@ -66,11 +71,11 @@ const update = async (req, res) => {
     const { id } = req.params;
     const { user_id } = req.app.locals;
 
-    // Check uom is exist
-    let checkUom = await findUomById(id);
-    if (!checkUom) {
-      return ResponseHelper(res, 409, 'uom is not exist', [
-        { message: 'uom is not exist', param: 'id' },
+    // Check variety is exist
+    let checkType = await findVarietyById(id);
+    if (!checkType) {
+      return ResponseHelper(res, 409, 'variety is not exist', [
+        { message: 'variety is not exist', param: 'id' },
       ]);
     }
 
@@ -83,15 +88,15 @@ const update = async (req, res) => {
       ]);
     }
 
-    // Update uom
-    await updateUom({ ...req.body }, { where: { id } });
+    // Update variety
+    await updateVariety({ ...req.body }, { where: { id } });
 
-    const result = await findUomById(id);
+    const result = await findVarietyById(id);
 
-    return ResponseHelper(res, 201, 'success updated selected uom', result);
+    return ResponseHelper(res, 201, 'success updated selected variety', result);
   } catch (error) {
     console.error(error);
-    return ResponseHelper(res, 500, 'failed updated selected uom', error.message);
+    return ResponseHelper(res, 500, 'failed updated selected variety', error.message);
   }
 };
 

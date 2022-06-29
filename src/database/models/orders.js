@@ -67,6 +67,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         field: 'reason',
       },
+      subtotal: {
+        allowNull: false,
+        type: DataTypes.DECIMAL(25, 2),
+        field: 'subtotal',
+      },
       total: {
         allowNull: false,
         type: DataTypes.DECIMAL(25, 2),

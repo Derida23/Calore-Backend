@@ -8,7 +8,6 @@ const validate = (method) => {
         body('description').not().isEmpty().withMessage('description can not be empty'),
         body('unit_in_stock').not().isEmpty().withMessage('stock can not be empty'),
         body('unit_price').not().isEmpty().withMessage('price can not be empty'),
-        body('uom_id').not().isEmpty().withMessage('uom can not be empty'),
         body('category_id').not().isEmpty().withMessage('category can not be empty'),
       ];
     }
