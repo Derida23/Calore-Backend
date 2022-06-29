@@ -17,10 +17,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'uom_id',
         as: 'uom',
       });
-      OrderDetail.belongsTo(models.Discounts, {
-        foreignKey: 'discount_id',
-        as: 'discount',
-      });
       OrderDetail.belongsTo(models.Varieties, {
         foreignKey: 'variety_id',
         as: 'variety',
@@ -64,16 +60,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.DECIMAL(25, 2),
         field: 'price',
-      },
-      subtotal: {
-        allowNull: false,
-        type: DataTypes.DECIMAL(25, 2),
-        field: 'subtotal',
-      },
-      discount_id: {
-        allowNull: true,
-        type: DataTypes.INTEGER,
-        field: 'discount_id',
       },
       total: {
         allowNull: false,

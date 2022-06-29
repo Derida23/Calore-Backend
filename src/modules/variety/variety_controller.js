@@ -21,8 +21,6 @@ const get = async (req, res) => {
 
     let variety = await findListVariety(requirement, page, limit);
 
-    console.log(variety);
-
     const meta = {
       limit: limit,
       page: page,

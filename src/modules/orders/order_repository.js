@@ -84,11 +84,6 @@ const findOrderDetail = async ({ order_id, search }) => {
           where: { name: search ? { [Op.like]: `%${search}%` } : { [Op.like]: `%%` } },
         },
         {
-          model: Discounts,
-          as: 'discount',
-          attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
-        },
-        {
           model: Uoms,
           as: 'uom',
           attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
@@ -133,16 +128,7 @@ const updateOrder = async (data, items, filter, transaction) => {
     await OrderDetails.bulkCreate(
       items,
       {
-        updateOnDuplicate: [
-          'product_id',
-          'uom_id',
-          'type_id',
-          'qty',
-          'price',
-          'subtotal',
-          'discount_id',
-          'total',
-        ],
+        updateOnDuplicate: ['product_id', 'uom_id', 'type_id', 'qty', 'price', 'total'],
         force: true,
       },
       { transaction }

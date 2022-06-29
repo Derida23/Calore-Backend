@@ -8,6 +8,7 @@ import {
 } from './order_repository';
 import { findProductById } from '../products/product_repository';
 import { findDiscountById } from '../discount/discount_repository';
+import { findTaxById } from '../tax/tax_repository';
 import { v4 as uuidv4 } from 'uuid';
 
 const get = async (req, res) => {
@@ -52,8 +53,6 @@ const getDetail = async (req, res) => {
 
     let order = await findOrderDetail(requirement);
 
-    console.log(order);
-
     const meta = {
       limit: order.length,
       page: 1,
@@ -73,7 +72,8 @@ const add = async (req, res) => {
     const { user_id } = req.app.locals;
 
     let productDb = [];
-    let discDb = [];
+    let discDb = null;
+    let taxDb = null;
     let items = [];
     let listOrder = await findListOrder({}, 1, 1);
 
@@ -82,10 +82,8 @@ const add = async (req, res) => {
       productDb.push(temporary);
     }
 
-    for (let it of req.body.items) {
-      let temporary = await findDiscountById(it.discount_id);
-      discDb.push(temporary);
-    }
+    if (req.body.discount_id) discDb = await findDiscountById(req.body.discount_id);
+    if (req.body.tax_id) taxDb = await findTaxById(req.body.tax_id);
 
     for (let [index, it] of req.body.items.entries()) {
       items.push({
@@ -95,17 +93,19 @@ const add = async (req, res) => {
         variety_id: it.variety_id,
         qty: it.qty,
         price: productDb[index].unit_price,
-        subtotal: productDb[index].unit_price * it.qty,
-        discount_id: it.discount_id,
-        total: discDb[index]
-          ? (productDb[index].unit_price -
-              (discDb[index].percentage / 100) * productDb[index].unit_price) *
-            it.qty
-          : productDb[index].unit_price * it.qty,
+        total: productDb[index].unit_price * it.qty,
       });
     }
 
-    let total = items.reduce((a, b) => a + b.total, 0);
+    let subtotal = items.reduce((a, item) => a + item.total, 0);
+    let price_discount = 0;
+    let price_tax = 0;
+    let total = 0;
+
+    if (discDb) price_discount = subtotal * (discDb.percentage / 100);
+    if (taxDb) price_tax = taxDb.type === 2 ? subtotal * (taxDb.percentage / 100) : 0;
+
+    total = subtotal - price_discount + price_tax;
 
     const vanilla = {
       order_number: uuidv4(),
@@ -114,6 +114,7 @@ const add = async (req, res) => {
       type: req.body.type,
       remark: req.body.remark,
       reason: req.body.reason,
+      subtotal,
       total,
       tax_id: req.body.tax_id,
       discount_id: req.body.discount_id,
@@ -134,6 +135,7 @@ const update = async (req, res) => {
 
     let productDb = [];
     let discDb = [];
+    let taxDb = [];
     let items = [];
     let order = await findOrderById(id);
 
@@ -154,8 +156,6 @@ const update = async (req, res) => {
         variety_id: it.variety_id,
         qty: it.qty,
         price: it.price,
-        subtotal: it.subtotal,
-        discount_id: it.discount_id,
         total: it.total,
       });
     }
@@ -165,10 +165,8 @@ const update = async (req, res) => {
       productDb.push(temporary);
     }
 
-    for (let it of req.body.items) {
-      let temporary = await findDiscountById(it.discount_id);
-      discDb.push(temporary);
-    }
+    if (req.body.discount_id) discDb = await findDiscountById(req.body.discount_id);
+    if (req.body.tax_id) taxDb = await findTaxById(req.body.tax_id);
 
     for (let [index, it] of req.body.items.entries()) {
       items.push({
@@ -179,17 +177,19 @@ const update = async (req, res) => {
         variety_id: it.variety_id,
         qty: it.qty,
         price: productDb[index].unit_price,
-        subtotal: productDb[index].unit_price * it.qty,
-        discount_id: it.discount_id,
-        total: discDb[index]
-          ? (productDb[index].unit_price -
-              (discDb[index].percentage / 100) * productDb[index].unit_price) *
-            it.qty
-          : productDb[index].unit_price * it.qty,
+        total: productDb[index].unit_price * it.qty,
       });
     }
 
-    let total = items.reduce((a, b) => a + b.total, 0);
+    let subtotal = items.reduce((a, item) => a + item.total, 0);
+    let price_discount = 0;
+    let price_tax = 0;
+    let total = 0;
+
+    if (discDb) price_discount = subtotal * (discDb.percentage / 100);
+    if (taxDb) price_tax = taxDb.type === 2 ? subtotal * (taxDb.percentage / 100) : 0;
+
+    total = subtotal - price_discount + price_tax;
 
     const vanilla = {
       order_number: order.order_number,
@@ -198,6 +198,7 @@ const update = async (req, res) => {
       type: req.body.type,
       remark: req.body.remark,
       reason: req.body.reason,
+      subtotal,
       total,
       tax_id: req.body.tax_id,
       discount_id: req.body.discount_id,
