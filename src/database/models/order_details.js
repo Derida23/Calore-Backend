@@ -13,9 +13,17 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'product_id',
         as: 'product',
       });
+      OrderDetail.belongsTo(models.Uoms, {
+        foreignKey: 'uom_id',
+        as: 'uom',
+      });
       OrderDetail.belongsTo(models.Discounts, {
         foreignKey: 'discount_id',
         as: 'discount',
+      });
+      OrderDetail.belongsTo(models.Varieties, {
+        foreignKey: 'variety_id',
+        as: 'variety',
       });
     }
   }
@@ -36,6 +44,16 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.INTEGER,
         field: 'product_id',
+      },
+      uom_id: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'uom_id',
+      },
+      variety_id: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'variety_id',
       },
       qty: {
         allowNull: false,

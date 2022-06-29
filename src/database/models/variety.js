@@ -3,8 +3,8 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Type extends Model {}
-  Type.init(
+  class Variety extends Model {}
+  Variety.init(
     {
       id: {
         allowNull: false,
@@ -43,12 +43,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Types',
-      tableName: 'cre_types',
+      modelName: 'Varieties',
+      tableName: 'cre_variety',
       underscored: true,
       freezeTableName: true,
     }
   );
 
-  return Type;
+  return Variety;
 };

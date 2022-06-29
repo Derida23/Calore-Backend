@@ -1,4 +1,3 @@
-import { validationResult } from 'express-validator';
 import ResponseHelper from '../../helpers/response_helper';
 import {
   createOrder,
@@ -53,6 +52,8 @@ const getDetail = async (req, res) => {
 
     let order = await findOrderDetail(requirement);
 
+    console.log(order);
+
     const meta = {
       limit: order.length,
       page: 1,
@@ -90,6 +91,8 @@ const add = async (req, res) => {
       items.push({
         order_id: listOrder.count === 0 ? listOrder.count + 1 : listOrder.count,
         product_id: it.product_id,
+        uom_id: it.uom_id,
+        variety_id: it.variety_id,
         qty: it.qty,
         price: productDb[index].unit_price,
         subtotal: productDb[index].unit_price * it.qty,
@@ -147,6 +150,8 @@ const update = async (req, res) => {
         id: it.id,
         order_id: it.order_id,
         product_id: it.product_id,
+        uom_id: it.uom_id,
+        variety_id: it.variety_id,
         qty: it.qty,
         price: it.price,
         subtotal: it.subtotal,
@@ -170,6 +175,8 @@ const update = async (req, res) => {
         id: it.id,
         order_id: id,
         product_id: it.product_id,
+        uom_id: it.uom_id,
+        variety_id: it.variety_id,
         qty: it.qty,
         price: productDb[index].unit_price,
         subtotal: productDb[index].unit_price * it.qty,
@@ -183,7 +190,6 @@ const update = async (req, res) => {
     }
 
     let total = items.reduce((a, b) => a + b.total, 0);
-    let updateList = [...temporary, ...items];
 
     const vanilla = {
       order_number: order.order_number,

@@ -1,5 +1,5 @@
 import db from '../../database/models';
-const { Orders, OrderDetails, Products, Users, Taxs, Discounts } = db;
+const { Orders, OrderDetails, Products, Uoms, Varieties, Users, Taxs, Discounts } = db;
 import { Op } from 'sequelize';
 
 // Find one order by id
@@ -88,6 +88,16 @@ const findOrderDetail = async ({ order_id, search }) => {
           as: 'discount',
           attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
         },
+        {
+          model: Uoms,
+          as: 'uom',
+          attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        },
+        {
+          model: Varieties,
+          as: 'variety',
+          attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] },
+        },
       ],
       where: {
         order_id,
@@ -123,7 +133,16 @@ const updateOrder = async (data, items, filter, transaction) => {
     await OrderDetails.bulkCreate(
       items,
       {
-        updateOnDuplicate: ['product_id', 'qty', 'price', 'subtotal', 'discount_id', 'total'],
+        updateOnDuplicate: [
+          'product_id',
+          'uom_id',
+          'type_id',
+          'qty',
+          'price',
+          'subtotal',
+          'discount_id',
+          'total',
+        ],
         force: true,
       },
       { transaction }
