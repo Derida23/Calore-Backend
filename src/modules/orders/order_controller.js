@@ -68,11 +68,6 @@ const getDetail = async (req, res) => {
 };
 
 const add = async (req, res) => {
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return ResponseHelper(res, 422, 'Validation Error', errors.array());
-  // }
-
   try {
     const { user_id } = req.app.locals;
 
@@ -130,11 +125,6 @@ const add = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return ResponseHelper(res, 422, 'Validation Error', errors.array());
-  // }
-
   try {
     const { id } = req.params;
     const { user_id } = req.app.locals;
@@ -194,7 +184,6 @@ const update = async (req, res) => {
 
     let total = items.reduce((a, b) => a + b.total, 0);
     let updateList = [...temporary, ...items];
-    // console.log(updateList);
 
     const vanilla = {
       order_number: order.order_number,
