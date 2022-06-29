@@ -4,6 +4,7 @@ import { TaxRoutes } from '../modules/tax/tax_routes';
 import { UserRoutes } from '../modules/user/user_routes';
 import { DiscountRoutes } from '../modules/discount/discount_routes';
 import { UomRoutes } from '../modules/uom/uom_routes';
+import { TypeRoutes } from '../modules/type/type_routes';
 import { CategoryRoutes } from '../modules/categories/category_routes';
 import { AddressRoutes } from '../modules/address/address_routes';
 import { ProductRoutes } from '../modules/products/product_routes';
@@ -31,6 +32,9 @@ const MainRoutes = (app) => {
 
   // uom routes
   UomRoutes(app, prefix);
+
+  // type routes
+  TypeRoutes(app, prefix);
 
   // category routes
   CategoryRoutes(app, prefix);
